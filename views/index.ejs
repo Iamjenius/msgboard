@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<link href="https://fonts.googleapis.com/css?family=Quicksand" rel="stylesheet">
+	<link href="http://fonts.googleapis.com/earlyaccess/notosanstc.css" rel="stylesheet">
+	<link rel="stylesheet" href="assets/css/msgboard.css">
+	<script src="https://www.gstatic.com/firebasejs/3.6.3/firebase.js"></script>
+	<script src="//code.jquery.com/jquery-1.10.2.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/3.6.3/firebase-app.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/3.6.3/firebase-auth.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/3.6.3/firebase-database.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/3.6.3/firebase-storage.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/3.6.3/firebase-messaging.js"></script>
+	<title>JS留言板</title>
+</head>
+<body>
+	<script type="text/javascript">
+		var config ={
+		    apiKey: "AIzaSyABPXDQF82jb6fl7zjAWyFYXZpWM1kijNs",
+		    authDomain: "webproject-1cc46.firebaseapp.com",
+		    databaseURL: "https://webproject-1cc46.firebaseio.com",
+		    storageBucket: "webproject-1cc46.appspot.com",
+		    messagingSenderId: "901093485324"
+		 };
+		firebase.initializeApp(config);
+		var database = firebase.database();
+
+		 function push(name, content) {
+          var key = firebase.database().ref('message/').push({
+            name: name,
+            content: content,
+          }).key;
+          var updates={};
+          updates['/message/'+key]=postData;
+          return firebase.database().ref().update(updates);
+        }            
+       
+        function show_msg(id, name, content){
+            $('.result_area').append("<li>名字: "+name+"<br> 留言: "+content+"<button class='delete' value='"+id+"'><img src='assets/image/delete.png' width='20px'></button>")
+        }
+        function delete_msg(id){
+            firebase.database().ref().child('/message/'+id).remove();
+        }
+
+        $(document).ready(function(){ 
+            $(".btn").click(function(){
+                $('.name_blank').empty();
+                 $('.content_blank').empty();
+                var name = $('.name_blank').val();
+                var content = $('.content_blank').val();
+                push(name, content);
+            });
+            $(document).on("click",".delete",function(){
+                var id=$(this).val();
+                $(this).parent().remove();
+                delete_msg(id);
+            });    
+        }); 
+
+        firebase.database().ref('/message/').once('value').then(function(snapshot) {
+            var message = snapshot.val();
+
+            $.each(snapshot.val(),function(i,e){
+                show_msg(i,e.name, e.content)
+            });
+        });
+	</script>
+	<div class="wrap">
+		<h1>高大留言板</h1>
+		<div class="content">
+			<form>
+				<input type="text" placeholder="Your name" class="name_blank" name="username"><br>
+				<textarea placeholder="Say something here..." class="content_blank" name="content"></textarea><br>
+				<input type="submit" class="btn" value="Submit">
+				<input type="reset" class="btn_2" value="Reset">
+			</form>
+			<hr>
+			<h2>留言區</h2>
+				<ul class="result_area">
+				</ul>
+		</div>
+	</div>
+</body>
+</html>
