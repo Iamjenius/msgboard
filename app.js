@@ -39,6 +39,8 @@ app.get('/', function(req, res){
 	res.render('index')});
 
 //偵測3000 port
-app.listen(3000);
+http.listen(process.env.PORT || 3000, function(){
+  console.log('listening on', http.address().port);
+});
 
 console.log('open');
