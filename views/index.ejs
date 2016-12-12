@@ -38,7 +38,7 @@
         }            
        
         function show_msg(id, name, content){
-            $('.result_area').append("<li>名字: "+name+"<br> 留言: "+content+"<button class='delete' value='"+id+"'><img src='assets/image/delete.png' width='20px'></button>")
+            $('.result_area').append("<li>名字: "+name+"<br> 留言: "+content+"<input type ='image' class='delete' value='"+id+"' src='assets/image/delete.png' width='20px'>")
         }
         function delete_msg(id){
             firebase.database().ref().child('/message/'+id).remove();
