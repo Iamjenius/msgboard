@@ -1,7 +1,7 @@
 {
   "name": "package.json",
   "version": "1.0.0",
-  "main": "test.js",
+  "main": "app.js",
   "dependencies": {
     "cheerio": "^0.22.0",
     "ejs": "^2.5.5",
